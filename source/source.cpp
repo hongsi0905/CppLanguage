@@ -1,106 +1,121 @@
 ﻿#include <iostream>
 using namespace std; 
 
-// 레퍼런스 연산자
-// 포인터를 이용하여 메모리 연산을 허용하지 않음
-
-// 참조자를 사용하는 이유
-void Function(int & x)
-{
-	x = 100;
-}
-
-// 인라인 함수
-// 함수를 호출하는 대신 함수가 호출되는 위치마다
-// 함수의 코드를 복사하여 전달하는 방식의 함수
-
-class cellPhone
+// 깊은 복사
+// 참조값이 아닌 인스턴스를 새로 복사하여 실제값을 복사하는 방법
+/*
+class Object
 {
 private:
-	int brightness;
-	int volume;
+	// m(멤버)_변수명
+	int m_position;
+	float m_size;
+	int* m_memory;
 
-	bool power;
 public:
-	// 값을 접근하는 함수 (Setter)
-	void SetVolume(int x)
+	// 얕은 복사
+	// 생성자는 public 
+	Object(int position, float size)
 	{
-		volume = x;
-	}
-	// 값을 읽는 함수(Getter)
-	int GetVolume()
-	{
-		return volume;
+		m_memory = new int(10);
+		m_position = position;
+		m_size = size;
+
+		cout << "memory : " << *m_memory << endl;
+		cout << "position : " << m_position << endl;
+		cout << "size : " << m_size << endl;
 	}
 
-	void SoundVolume(int volumeValue)
+	// 복사 생성자
+	// 같은 클래스의 객체로부터 '복사'해서 새로운 객체를 생성하는 생성자
+	
+	// 복사 생성자에 인수로 &를 받는 이유
+	// 새로운 객체를 생성할 때 생기는 오버헤드 현상을 방지하기 위해 선언
+
+	// const : 복사된 데이터를 보호하기 위해 상수화
+	Object(const Object& copyObject)
 	{
-		if (volumeValue >= 100)
-		{
-			volumeValue = 100;
-		}
-		else if (volumeValue < 0)
-		{
-			volumeValue = 0;
-		}
+		m_memory = new int(*copyObject.m_memory);
+		m_position = copyObject.m_position;
+		m_size = copyObject.m_size;
 
-		volume = volumeValue;
+		cout << "memory : " << *m_memory << endl;
+		cout << "position : " << m_position << endl;
+		cout << "size : " << m_size << endl;
 
-		cout << volume << endl;
 	}
+	// 객체 소멸 시 동적할당한 메모리 공간을 해제
+	~Object()
+	{
+		delete m_memory;
+	}
+	
+};
+*/
+
+// 기본생성자
+// 프로그래머가 정의한 생성자가 없는 경우
+// 컴파일러가 자동으로 생성하는 생성자
+class Book
+{
+public:
+	int page;
+	string name;
+
+	//기본 생성자의 경우 생성자가 하나라도 선언되어 있다면 기본 생성자가 자동으로 생성되지 않음
+	// Book() {}; << 생성자가 없는 기본 생성자를 생성
+
+	Book()
+	{
+		cout << "생성자 호출" << endl;
+	}
+};
+class Cover : Book
+{
 
 };
 
+
 int main()
 {
-	// 참조자 : 자신이 참조하는 변수를 대신할 수 있는 또 하나의 이름
+	// 얕은 복사
 	/*
+	// 값을 복사하는데 인스턴스가 메모리에 새로 생성되지 않는 형태
+	// 그렇기에 값 자체를 복사하는 것이 아니라 주소값을 복사하여
+	// 같은 메모리를 가리키게 하는 복사
 
-	// 하나의 메모리 공간에 2개의 이름이 존재하는 형태
-	// 참조자는 초기화를 하지 않으면 사용할 수 없다
-	// 참조자는 NULL로도 초기화 할 수 없다.
-	int a = 10;
-	int& tvalue = a;
-	int& ref = tvalue;
+	int* a = new int(10);
+	int* b = new int(20);
 
-	cout << "a : " << a << endl;
-	cout << "tvalue : " << tvalue << endl;
+	// 얕은 복사가 발생
+	a = b;
+
+	*b = 100;
+
+	cout << "a : " << *a << endl;
+	cout << "b : " << *b << endl;
+
+	delete a;
 	
-	tvalue = 30;
 
-	cout << "a : " << a << endl;
-	cout << "tvalue : " << tvalue << endl;
-	cout << "ref : " << ref << endl;
+	// 생성자에 매개변수가 있다면 클래스를 인스턴스할 때
+	// 클래스에 인수를 넣어주어야한다.
+	Object cat1(10, 2.5);
+	Object cat2 = cat1;
+	
+	int a = 10;
+	int b = 20;
+	int c = 30;
 
-	Function(a);
+	int array[3] = { a,b,c };
 
+	array[0] = 100;
+	cout << array[0] << endl;
 	cout << a << endl;
-
 	*/
 
-	// 인라인 함수
-	/*
-	// 함수 내 있는 내용이 간단할 때 사용
-	// 함수가 여러 번 호출되는 함수일 경우 인라인 함수를 사용하면
-	// 컴파일 크기가 커진다.
-	// Function();
-	*/
-
-	// 객체 지향 프로그래밍
-	cellPhone iPhone;
-	// 여러 개의 객체들끼리 상호작용을 통해
-	// 로직을 구성하는 프로그래밍 방법
-	// cout << "최대 볼륨 : ";
-	// iPhone.SoundVolume(2000);
-
-	// 1. 캡슐화
-	/*
-		클래스의 속성(변수)과 기능(함수)를 하나로 묶은 다음
-		실제 구현 내용의 일부를 내부에 감추어 은닉하는 속성
-		cout << "볼륨 설정 : ";
-		iPhone.SetVolume(10);
-		cout << iPhone.GetVolume() << endl;
-	*/
+	Book book1;
+	Cover cover;
 
 	return 0;
 }
