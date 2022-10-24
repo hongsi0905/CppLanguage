@@ -1,133 +1,140 @@
 ﻿#include <iostream>
 using namespace std; 
 
-class Animal
-{
-private: // 속성
-	float weight;
-
-public:
-	// 가상함수 : 상속하는 클래스 내에 같은 함수로 재정의될 수 있는 함수
-	// 규칙
-	// 1. public으로 선언되어야 한다
-	// 2. static(정적)으로 선언될 수 없다.
-	// 3. 실행 시간에 다형성을 형성하기 위해 기본 클래스의 포인터/참조를 통해 접근
-	// 4. 상위 클래스와 하위 클래스의 함수 형태가 동일
-
-	virtual	void Sound() 
-	{
-		cout << "동물의 소리" << endl;
-	}
-
-	void Attack()
-	{
-		cout << "공격" << endl;
-	}
-};
-class Cat : public Animal
-{
-	// 상위 클래스에 있는 Sound() 함수를 사용하기 위해서는
-	// 같은 이름으로 정의해주어야 한다
-public:
-	void Sound()
-	{
-		cout << "냐옹" << endl;
-	}
-	void Attack()
-	{
-		cout << "냥냥펀치" << endl;
-	}
-};
-class Dog : public Animal
+// 함수의 오버라이딩
+// 이미 정의된 함수를 무시하고 같은 함수명을 새롭게 정의
+class Parent
 {
 public:
-	void Sound()
+	virtual void Talk()
 	{
-		cout << "멍멍" << endl;
+		cout << "Parent 클래스 Talk 함수" << endl;
 	}
-	void Attack()
+	void Information()
 	{
-		cout << "꾹꾹이" << endl;
+		cout << "Parent 클래스" << endl;
 	}
 };
 
-// 오버로딩 : 같은 이름의 함수를 여러 개 만들 수 있는 기능
-// 함수의 오버로딩은 매개변수의 갯수와 타입
-void Calculator(int x)
+class Child : public Parent
 {
-	cout << "int 계산기 : " << endl;
-	cout << x << endl;
-}
-// 함수의 오버로딩은 반환형에 영향을 받지 않음 (return)
+public :
+	// 오버라이딩할 때 상위 클래스의 함수명과 동일하게 만들어야함
+	void Information()
+	{
+		cout << "Child 클래스" << endl;
+	}
+	void Talk()
+	{
+		cout << "Child 클래스 Talk 함수" << endl;
+	}
+};
 
-void Calculator(int x, int y)
+// 상속 관계일 때 생성자와 소멸자 호출 순서
+class Fruit
 {
-	cout << "int 계산기" << endl;
-	cout << x + y << endl;
- }
-void Calculator(float x, float y)
+public:
+	Fruit()
+	{
+		cout << "Fruit 클래스 생성" << endl;
+	}
+	~Fruit()
+	{
+		cout << "Fruit 클래스 소멸" << endl;
+
+	}
+	
+};
+class Apple : public Fruit
 {
-	cout << "float 계산기" << endl;
-	cout << x + y << endl;
-}
+public:
+	Apple()
+	{
+		cout << "Apple 클래스 생성" << endl;
+	}
+	~Apple()
+	{
+		cout << "Apple 클래스 소멸" << endl;
+	}
+};
+
+// 순수 가상함수
+// 선언만 있고 구현이 없는 가상함수
+class Pen
+{
+public :
+	// 순수 가상함수는 함수에 0을 넣어주고
+	// 하위 클래스에서 재정의할 것으로 예상되는 함수에 대해
+	// 미리 호출 계획을 세워두기 위해 정의
+	virtual void Draw() = 0;
+	virtual void Color() = 0;
+};
+class Circle : public Pen
+{
+public:
+	// 순수 가상함수는 무조건 하위 클래스에서 재정의 필수
+	void Draw()
+	{
+		cout << "동그라미" << endl;
+	}
+	void Color()
+	{
+		cout << "빨간색" << endl;
+	}
+};
+class Rectangle : public Pen
+{
+public :
+	void Draw()
+	{
+		cout << "네모" << endl;
+	}
+
+	void Color()
+	{
+		cout << "파란색" << endl;
+	}
+};
 
 int main()
 {
-	// 다형성 : 객체가 여러 형태를 받아들일 수 있는 성질
-	// 상황에 따라 다른 의미를 부여하여 사용할 수 잇는 속성
-	/*Animal animal;
-	animal.Sound();
+	// 가상 함수 테이블
+	/*
+	Parent* parent = new Parent;
+	Child* child = new Child;
 
-	Cat cat;
-	cat.Sound();
+	parent->Talk();			// 가상 함수
+	parent->Information();	// 일반 함수
 
-	Dog dog;
-	dog.Sound();*/
-	// 실행 시간에 이루어져한다
+	parent = child;
 
-	// 바인딩
-	// 프로그램 소스에 사용된 이름이나 식별자 그리고 함수들에 대해
-	// 값 또는 속성을 확정하는 과정
-
-	// 정적 바인딩
-	// 컴파일 시점에 이루어지는 바인딩
-	// 컴파일이 끝나면 결정된 속성들은 변경 불가능
-
-	// 동적 바인딩
-	// 실행시간에 이루어지는 바인딩
-	// 실행시간에 필요한 객체의 함수를 호출할 수 있으며
-	// 유연성을 가질 수 있다
-
-	// 일반 함수는 정적 바인딩으로 컴파일 시점 결정
-	/*Animal* animal = new Animal;
-
-	animal->Sound();
-
-	Cat* cat = new Cat;
-	cat->Sound();
-	animal = cat;
-
-	cat->Sound();
-	animal->Sound();*/
-
-
-	// 가상함수는 실행 시간에 원하는 함수를 호출
-	Animal* ani1 = new Cat; // 실행 시간에 컴파일러가 인식
-	Animal* ani2 = new Dog;
-
+	// parent 포인터의 참조를 child의 메모리 공간을 가리키도록 변경
 	
-	ani1->Sound();
-	ani1->Attack();
+	// 가상 함수테이블
+	// 함수 포인터배열이며, 이 포인터를 따라가서 가상 함수로
+	// 선언된 멤버 함수들의 주소에 배열 형태로 접근하여 호출하는 테이블
 
-	ani1 = ani2;
+	// 가상 함수테이블이 실제 호출되어야 할 함수의 위치를 저장
 
-	ani2->Sound();
-	ani2->Attack();
+	parent->Talk();
+	parent->Information();
+	*/
+	// 상속 관계일 때 생성자와 소멸자 호출 순서
+	/*
+	// 먼저 호출 후 다음 하위 클래스의 생성자 호출
+	// 
+	// 소멸자는 생성자의 역순으로 호출  Last In Firt Out
+	Apple apple;
+	*/
 
-	Calculator(10, 20);
+	// 추상 클래스 : 일부 함수가 구현되지 않고, 선언만 되어있는 클래스
+	// 추상 클래스는 객체를 생성할 수 없다
 
-	Calculator(10.5f, 16.7f);
+	// 상속받은 클래스에서도 순수 가상함수들을 모두 다 재정의해야만 생성
+	Circle circle;
+	circle.Draw();
 
-
+	Rectangle rectangle;
+	rectangle.Draw();
 	return 0;
 }
