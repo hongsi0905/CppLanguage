@@ -1,140 +1,111 @@
 ﻿#include <iostream>
+#include <conio.h>
+#include <time.h>
 using namespace std; 
+// 가상소멸자 : 가상 소멸자는 존재하지만 가상 생성자는 존재하지 않는다
 
-// 함수의 오버라이딩
-// 이미 정의된 함수를 무시하고 같은 함수명을 새롭게 정의
-class Parent
+class A
 {
 public:
-	virtual void Talk()
+	A()
 	{
-		cout << "Parent 클래스 Talk 함수" << endl;
+		cout << "A 생성" << endl;
 	}
-	void Information()
+	virtual ~A()
 	{
-		cout << "Parent 클래스" << endl;
+		cout << "A 제거" << endl;
+	}
+};
+class B : public A
+{
+public:
+	B()
+	{
+		cout << "B 생성" << endl;
+	}
+	virtual ~B()
+	{
+		cout << "B 제거" << endl;
 	}
 };
 
-class Child : public Parent
+// 프렌드 : 클래스의 멤버 함수는 아니지만, 클래스에 friend 라고 선언시
+// 클래스의 멤버 함수처럼 private 멤버에 접근할 수 있는 기능
+class PeopleA
 {
-public :
-	// 오버라이딩할 때 상위 클래스의 함수명과 동일하게 만들어야함
-	void Information()
-	{
-		cout << "Child 클래스" << endl;
-	}
-	void Talk()
-	{
-		cout << "Child 클래스 Talk 함수" << endl;
-	}
-};
-
-// 상속 관계일 때 생성자와 소멸자 호출 순서
-class Fruit
-{
-public:
-	Fruit()
-	{
-		cout << "Fruit 클래스 생성" << endl;
-	}
-	~Fruit()
-	{
-		cout << "Fruit 클래스 소멸" << endl;
-
-	}
+private:
+	int age;
+	// 프렌드 클래스 명을 선언
 	
+	friend void FriendInformation(PeopleA a) <- 전역 함수 선언
+	{
+		cout << "A 클래스 정보" << endl;
+	}
+	// friend 키워드는 public, private, protected
+	// 어디에서든 사용가능
+	friend class PeopleB;
+
+public:
+	PeopleA(int age)
+	{
+		this->age = age;
+	}
+
 };
-class Apple : public Fruit
+class PeopleB
 {
 public:
-	Apple()
+	void FriendInformation(PeopleA people)
 	{
-		cout << "Apple 클래스 생성" << endl;
-	}
-	~Apple()
-	{
-		cout << "Apple 클래스 소멸" << endl;
+		cout << people.age << endl;
 	}
 };
 
-// 순수 가상함수
-// 선언만 있고 구현이 없는 가상함수
-class Pen
-{
-public :
-	// 순수 가상함수는 함수에 0을 넣어주고
-	// 하위 클래스에서 재정의할 것으로 예상되는 함수에 대해
-	// 미리 호출 계획을 세워두기 위해 정의
-	virtual void Draw() = 0;
-	virtual void Color() = 0;
-};
-class Circle : public Pen
-{
-public:
-	// 순수 가상함수는 무조건 하위 클래스에서 재정의 필수
-	void Draw()
-	{
-		cout << "동그라미" << endl;
-	}
-	void Color()
-	{
-		cout << "빨간색" << endl;
-	}
-};
-class Rectangle : public Pen
-{
-public :
-	void Draw()
-	{
-		cout << "네모" << endl;
-	}
-
-	void Color()
-	{
-		cout << "파란색" << endl;
-	}
-};
 
 int main()
 {
-	// 가상 함수 테이블
+	// 가상 소멸자
 	/*
-	Parent* parent = new Parent;
-	Child* child = new Child;
+	// 가상소멸자가 호출되면 상속 구조의 맨 아래에 있는 하위 클래스의
+	// 소멸자가 대신 호출되면서 상위 클래스의 소멸자가 순서대로 호출
+	A* av = new B();
+	delete av;
+	*/
 
-	parent->Talk();			// 가상 함수
-	parent->Information();	// 일반 함수
+	// 프렌드
+	/*
+	PeopleA a(10);
+	Information(a);
+	PeopleB b;
+	b.FriendInformation(a);
+	*/
 
-	parent = child;
+	/*
+	int a, b;
+	cin >> a >> b;
 
-	// parent 포인터의 참조를 child의 메모리 공간을 가리키도록 변경
+	int n1 = a * (b % 10);
+	cout << n1 << endl;
+
+	int n2 = a * (b % 100 / 10);
+	cout << n2 << endl;
+
+	int n3 = a * (b / 100);
+	cout << n3 << endl;
+
+	cout << a * b << endl;
+	*/
 	
-	// 가상 함수테이블
-	// 함수 포인터배열이며, 이 포인터를 따라가서 가상 함수로
-	// 선언된 멤버 함수들의 주소에 배열 형태로 접근하여 호출하는 테이블
+	// 중복되지 않는 랜덤값
+	// 배열을 생성 후 순차적으로 값 저장
+	
+	int array[10];
+	srand(time_t(NULL));
+	for (int i = 0; i < 10;i++)
+	{
+		array[i] = rand() % 10 +1;
+		cout << array[i] << endl;
+	}
 
-	// 가상 함수테이블이 실제 호출되어야 할 함수의 위치를 저장
-
-	parent->Talk();
-	parent->Information();
-	*/
-	// 상속 관계일 때 생성자와 소멸자 호출 순서
-	/*
-	// 먼저 호출 후 다음 하위 클래스의 생성자 호출
-	// 
-	// 소멸자는 생성자의 역순으로 호출  Last In Firt Out
-	Apple apple;
-	*/
-
-	// 추상 클래스 : 일부 함수가 구현되지 않고, 선언만 되어있는 클래스
-	// 추상 클래스는 객체를 생성할 수 없다
-
-	// 상속받은 클래스에서도 순수 가상함수들을 모두 다 재정의해야만 생성
-	Circle circle;
-	circle.Draw();
-
-	Rectangle rectangle;
-	rectangle.Draw();
 	return 0;
 }
