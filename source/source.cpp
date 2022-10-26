@@ -1,110 +1,114 @@
 ﻿#include <iostream>
-#include <conio.h>
-#include <time.h>
 using namespace std; 
-// 가상소멸자 : 가상 소멸자는 존재하지만 가상 생성자는 존재하지 않는다
+// 다중 상속
+// 어떤 클래스가 하나 이상의 상위 클래스로부터 여러가지 행동이나 특징을
+// 상속받을 수 있는 상속
 
+class Keyboard
+{
+public:
+	Keyboard()
+	{
+		cout << "키보드 호출" << endl;
+	}
+	void Input()
+	{
+		cout << "키보드 입력" << endl;
+	}
+	char key;
+};
+class Mouse
+{
+public :
+	Mouse()
+	{
+		cout << "마우스 호출" << endl;
+	}
+
+	void Input()
+	{
+		cout << "마우스 입력" << endl;
+	}
+	int sensor;
+};
+class Computer : public Keyboard, public Mouse
+{
+public:
+	Computer(char _key, int _sensor)
+	{
+		Keyboard::key = _key;
+		Mouse::sensor = _sensor;
+
+		cout << Keyboard::key << endl;
+		cout << Mouse::sensor << endl;
+	}
+};
+
+// 다이아몬드 상속
 class A
 {
 public:
 	A()
 	{
-		cout << "A 생성" << endl;
-	}
-	virtual ~A()
-	{
-		cout << "A 제거" << endl;
+		cout << "A클 호출" << endl; 
 	}
 };
-class B : public A
+class B : virtual public A
 {
 public:
 	B()
 	{
-		cout << "B 생성" << endl;
-	}
-	virtual ~B()
-	{
-		cout << "B 제거" << endl;
+		cout << "B클 호출" << endl;
 	}
 };
-
-// 프렌드 : 클래스의 멤버 함수는 아니지만, 클래스에 friend 라고 선언시
-// 클래스의 멤버 함수처럼 private 멤버에 접근할 수 있는 기능
-class PeopleA
+class C : virtual public A
 {
-private:
-	int age;
-	// 프렌드 클래스 명을 선언
-	
-	friend void FriendInformation(PeopleA a) <- 전역 함수 선언
-	{
-		cout << "A 클래스 정보" << endl;
-	}
-	// friend 키워드는 public, private, protected
-	// 어디에서든 사용가능
-	friend class PeopleB;
-
 public:
-	PeopleA(int age)
+	C()
 	{
-		this->age = age;
+		cout << "C클 호출" << endl;
 	}
-
 };
-class PeopleB
+class D : public B, public C
 {
 public:
-	void FriendInformation(PeopleA people)
+	D()
 	{
-		cout << people.age << endl;
+		cout << "D클 호출" << endl;
 	}
 };
 
 
 int main()
 {
-	// 가상 소멸자
+	// 다중상속
 	/*
-	// 가상소멸자가 호출되면 상속 구조의 맨 아래에 있는 하위 클래스의
-	// 소멸자가 대신 호출되면서 상위 클래스의 소멸자가 순서대로 호출
-	A* av = new B();
-	delete av;
+	// 다중 상속일 때 같은 명의 함수를 사용하려면 클래스를 명시하고
+	// 범위 지정 연산자를 사용하여 함수 호출
+	Computer computer('A', 40);
+	computer.Keyboard::Input();
 	*/
 
-	// 프렌드
+	// 다이아몬드 상속
 	/*
-	PeopleA a(10);
-	Information(a);
-	PeopleB b;
-	b.FriendInformation(a);
+	// 하나의 자식 클래스가 상속받는 서로 다른 부모 클래스들이
+	// 같은 조부모 클래스를 상속받는 구조
+	D d;
 	*/
 
-	/*
-	int a, b;
-	cin >> a >> b;
+	// 나머지
+	int array[10] = { 0, };
+	int result = 0;
+	int input = 0;
 
-	int n1 = a * (b % 10);
-	cout << n1 << endl;
-
-	int n2 = a * (b % 100 / 10);
-	cout << n2 << endl;
-
-	int n3 = a * (b / 100);
-	cout << n3 << endl;
-
-	cout << a * b << endl;
-	*/
-	
-	// 중복되지 않는 랜덤값
-	// 배열을 생성 후 순차적으로 값 저장
-	
-	int array[10];
-	srand(time_t(NULL));
-	for (int i = 0; i < 10;i++)
+	for (int i = 0;i < 10;i++)
 	{
-		array[i] = rand() % 10 +1;
-		cout << array[i] << endl;
+		cin >> input;
+		array[i] = input % 42;
+	}
+	for (int i = 0; i <= 9; i++)
+	{
+		int count = 0;
 	}
 
 	return 0;
