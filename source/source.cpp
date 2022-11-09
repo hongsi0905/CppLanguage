@@ -1,115 +1,123 @@
 ﻿#include <iostream>
-using namespace std; 
-// 다중 상속
-// 어떤 클래스가 하나 이상의 상위 클래스로부터 여러가지 행동이나 특징을
-// 상속받을 수 있는 상속
 
-class Keyboard
+using namespace std;
+
+// const 함수
+/*
+// const 함수 내부에서 변수의 값을 변경할 수 없도록 선언하는 함수입니다.
+class Character
 {
+private :
+	int health;
+	string name;
 public:
-	Keyboard()
+	void SetInfo(int m_health, string m_name)
 	{
-		cout << "키보드 호출" << endl;
+		health = m_health;
+		name = m_name;
 	}
-	void Input()
+	void GetInfo() const
 	{
-		cout << "키보드 입력" << endl;
-	}
-	char key;
-};
-class Mouse
-{
-public :
-	Mouse()
-	{
-		cout << "마우스 호출" << endl;
-	}
-
-	void Input()
-	{
-		cout << "마우스 입력" << endl;
-	}
-	int sensor;
-};
-class Computer : public Keyboard, public Mouse
-{
-public:
-	Computer(char _key, int _sensor)
-	{
-		Keyboard::key = _key;
-		Mouse::sensor = _sensor;
-
-		cout << Keyboard::key << endl;
-		cout << Mouse::sensor << endl;
+		// const 함수의 역할은 함수 내에서 멤버 변수의 값을 읽기 전용으로
+		// 선언하기 위해서 사용되는 기능입니다.
+		// health = 300;
+		cout << "health의 값 : " << health << endl;
+		cout << "name의 값 : " << name << endl;
 	}
 };
+*/
 
-// 다이아몬드 상속
+// final 
+/*
+// 더 이상 클래스나 가상함수를 상속받지 않고 재정의할 수 없도록
+// 설정해주는 키워드입니다.
 class A
 {
 public:
-	A()
+	void FunctionA()
 	{
-		cout << "A클 호출" << endl; 
+		cout << "A의 함수입니다." << endl;
+	}
+	virtual void FunctionB1()
+	{
+		cout << "A 클래스에서 호출한 B1 함수입니다." << endl;
 	}
 };
-class B : virtual public A
+// 클래스에 final을 설정하게 되면 B 클래스 밑에 자식 클래스를
+// 설정할 수없습니다.
+class B : public  A
 {
-public:
-	B()
+public :
+	virtual void FunctionB()
 	{
-		cout << "B클 호출" << endl;
+		cout << "B의 함수입니다." << endl;
+	}
+	void FunctionB1() final
+	{
+		cout << "B 클래스에서 호출한 B1의 함수입니다." << endl;
 	}
 };
-class C : virtual public A
+class C	: public B
 {
-public:
-	C()
+	void FunctionB()
 	{
-		cout << "C클 호출" << endl;
+		cout << "C 클래스에서 호출한 B의 함수입니다. " << endl;
 	}
+	// FunctionB1 함수는 B 클래스에서 final로 선언했기 때문에
+	// 자식 클래스 C에서 재정의할 수 없습니다.
+	// void FunctionB1() { }
 };
-class D : public B, public C
-{
-public:
-	D()
-	{
-		cout << "D클 호출" << endl;
-	}
-};
+*/
 
+// 상속의 접근 지정자
+/*
+// 상속 private, protected, public
+// private : 외부에서 접근못하도록 설정하는 제한자입니다.
+// protected : 클래스 내부와 자기가 상속하는 클래스까지만 접근을 허용하는 제한자입니다.
+// public : 외부에서도 접근을 허용하는 제한자입니다.
+class CPU
+{
+public:
+	void Count()
+	{
+		cout << "CPU Count" << endl;
+	}
+};
+// 상속을 할 때 접근 지정자를 명시적으로 선언하지 않으면
+// 기본 접근 지정자(private)로 선언됩니다.
+// 상속에서 private 접근 지정자로 상속받게 되면
+// 부모 클래스의 멤버를 자식 클래스에서 호출할 수 없습니다.
+class ALU : public CPU
+{
+};
+*/
+
+// is-a 관계
+// is-a 관계는 일반적인 개념과 구체적인 개념과의 관계입니다.
+
+// has-a 관계
+// 구성 관계를 의미하며 한 오브젝트(구성된 객체, 또는 부분/멤버 객체라고도 부릅니다)
+// 가 다른 오브젝트(composite type이라고 부릅니다)에 "속한다(belongs to)"를 말합니다.
 
 int main()
 {
-	// 다중상속
+	// const 함수
 	/*
-	// 다중 상속일 때 같은 명의 함수를 사용하려면 클래스를 명시하고
-	// 범위 지정 연산자를 사용하여 함수 호출
-	Computer computer('A', 40);
-	computer.Keyboard::Input();
+	Character character;
+	character.SetInfo(99, "칼리스타");
+	character.GetInfo();
 	*/
 
-	// 다이아몬드 상속
+	// final
 	/*
-	// 하나의 자식 클래스가 상속받는 서로 다른 부모 클래스들이
-	// 같은 조부모 클래스를 상속받는 구조
-	D d;
+	C cClass;
 	*/
 
-	// 나머지
-	int array[10] = { 0, };
-	int result = 0;
-	int input = 0;
-
-	for (int i = 0;i < 10;i++)
-	{
-		cin >> input;
-		array[i] = input % 42;
-	}
-	for (int i = 0; i <= 9; i++)
-	{
-		int count = 0;
-	}
+	// 상속에서 접근 지정자
+	/*
+	ALU alu;
+	alu.Count();
+	*/
 
 	return 0;
 }
